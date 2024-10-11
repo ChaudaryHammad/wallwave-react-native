@@ -6,10 +6,8 @@ export default function TabLayout() {
 
 
   return (
-   <>
+ 
 
-
-   <StatusBar style="dark" />
 
    
    
@@ -36,6 +34,6 @@ export default function TabLayout() {
         }}
       />
     </Tabs>
-   </>
+ 
   );
 }
