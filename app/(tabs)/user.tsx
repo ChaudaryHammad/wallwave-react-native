@@ -1,10 +1,10 @@
 import { View, Text, Button } from "react-native";
 import React, { useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Link } from "expo-router";
-import { DownloadPicture } from "@/components/BottomSheat";
 
-const account = () => {
+import { Link } from "expo-router";
+import { DownloadPicture } from "@/src/components/BottomSheat";
+
+const User = () => {
   const [pictureOpen, setPictureOpen] = useState<boolean>(false);
   return (
     <View
@@ -23,7 +23,7 @@ const account = () => {
         }}
         href={"/accountInfo"}
       >
-        Go to Account Info -->
+        Go to Account Info
       </Link>
 
       {pictureOpen && <DownloadPicture onClose={() => setPictureOpen(false)} />}
@@ -31,4 +31,4 @@ const account = () => {
   );
 };
 
-export default account;
+export default User;

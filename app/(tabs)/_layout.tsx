@@ -1,37 +1,41 @@
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { Tabs } from "expo-router";
-import { SafeAreaView } from "react-native";
+import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
+import { FontAwesome5 } from "@expo/vector-icons";
 
-export default function TabLayout() {
+import Explore from "./explore";
+import Index from "./index";
+import User from "./user";
+
+export default function BottomTabLayout() {
+  const Tab = createMaterialBottomTabNavigator();
   return (
-    <Tabs screenOptions={{ tabBarActiveTintColor: "blue", headerShown: false }}>
-      <Tabs.Screen
-        name="explore"
+    <Tab.Navigator>
+      <Tab.Screen
+        name="Explore"
+        component={Explore}
         options={{
-          title: "For you",
-          tabBarIcon: ({ color }) => (
-            <FontAwesome size={28} name="home" color={color} />
+          tabBarIcon: ({ color, focused }) => (
+            <FontAwesome5 name="home" color={color} size={focused ? 25 : 20} />
           ),
         }}
       />
-      <Tabs.Screen
-        name="index"
+      <Tab.Screen
+        name="Feed"
+        component={Index}
         options={{
-          title: "Explore",
-          tabBarIcon: ({ color }) => (
-            <FontAwesome size={28} name="map" color={color} />
+          tabBarIcon: ({ color, focused }) => (
+            <FontAwesome5 name="map" color={color} size={focused ? 25 : 20} />
           ),
         }}
       />
-      <Tabs.Screen
-        name="(acc)/account"
+      <Tab.Screen
+        name="User"
+        component={User}
         options={{
-          title: "Account",
-          tabBarIcon: ({ color }) => (
-            <FontAwesome size={28} name="cog" color={color} />
+          tabBarIcon: ({ color, focused }) => (
+            <FontAwesome5 name="user" color={color} size={focused ? 25 : 20} />
           ),
         }}
       />
-    </Tabs>
+    </Tab.Navigator>
   );
 }
