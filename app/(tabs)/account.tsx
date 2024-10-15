@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Link } from "expo-router";
 import { DownloadPicture } from "@/src/components/BottomSheat";
 
-const User = () => {
+const UserAccount = () => {
   const [pictureOpen, setPictureOpen] = useState<boolean>(false);
   return (
     <View
@@ -31,4 +31,4 @@ const User = () => {
   );
 };
 
-export default User;
+export default UserAccount;

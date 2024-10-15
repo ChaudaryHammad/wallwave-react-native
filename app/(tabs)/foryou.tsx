@@ -3,30 +3,30 @@ import React from "react";
 
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
-const Explore = () => {
+const Foryou = () => {
   const Tab = createMaterialTopTabNavigator();
   return (
     <Tab.Navigator>
-      <Tab.Screen name="Home" component={Home} />
-      <Tab.Screen name="Settings" component={Feed} />
+      <Tab.Screen name="Library" component={Library} />
+      <Tab.Screen name="Liked" component={Liked} />
       <Tab.Screen name="Suggested" component={Recommeded} />
     </Tab.Navigator>
   );
 };
 
-export default Explore;
-function Home() {
+export default Foryou;
+function Library() {
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>home!</Text>
+      <Text>Library</Text>
     </View>
   );
 }
 
-function Feed() {
+function Liked() {
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>feed!</Text>
+      <Text>Liked</Text>
     </View>
   );
 }
