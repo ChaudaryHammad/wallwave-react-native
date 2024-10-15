@@ -13,7 +13,7 @@ export default function BottomTabLayout() {
         name="For you"
         component={Foryou}
         options={{
-          tabBarIcon: ({ color }) => (
+          tabBarIcon: ({ color, focused }) => (
             <FontAwesome5 name="home" color={color} size={20} />
           ),
         }}
