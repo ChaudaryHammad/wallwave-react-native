@@ -1,4 +1,10 @@
-import { View, Text, StyleSheet, useColorScheme } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  useColorScheme,
+  useWindowDimensions,
+} from "react-native";
 import React from "react";
 import { AuthButton, ThemeButton } from "@/src/components";
 import { Ionicons } from "@expo/vector-icons";
@@ -6,6 +12,7 @@ import { ThemedView } from "@/src/components/ThemedView";
 import { useTheme } from "@/src/context/ThemeContext";
 
 const Account = () => {
+  const windowWidth = useWindowDimensions().width;
   const { currentTheme, setTheme } = useTheme();
 
   return (
@@ -54,14 +61,20 @@ const Account = () => {
           style={{
             marginTop: 10,
 
+            alignItems: "center",
             gap: 10,
             padding: 10,
-
-            justifyContent: "center",
           }}
         >
-          <AuthButton title="Sign in" icon="logo-google" />
-          <AuthButton title="Sign in" icon="logo-apple" />
+          <View
+            style={{
+              width: windowWidth < 400 ? "100%" : "50%",
+              gap: 10,
+            }}
+          >
+            <AuthButton title="Sign in" icon="logo-google" />
+            <AuthButton title="Sign in" icon="logo-apple" />
+          </View>
         </View>
 
         <View style={{ marginTop: 10 }}>
@@ -88,7 +101,7 @@ const Account = () => {
           <View
             style={{
               flexDirection: "row",
-              gap: 10,
+              gap: 20,
               padding: 10,
 
               justifyContent: "center",

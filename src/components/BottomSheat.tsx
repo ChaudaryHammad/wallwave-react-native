@@ -4,8 +4,9 @@ import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import { Wallpaper } from "../hooks/useWallpaper";
 
 import { Ionicons } from "@expo/vector-icons";
-import { useTheme } from "react-native-paper";
+
 import { ThemedView } from "./ThemedView";
+import { useTheme } from "../context/ThemeContext";
 
 export const DownloadPicture = ({
   onClose,
@@ -18,8 +19,7 @@ export const DownloadPicture = ({
   const bottomSheetRef = useRef<BottomSheet>(null);
 
   const snapPoints = useMemo(() => ["95%"], []);
-  const theme = useTheme().dark ? "light" : "dark";
-
+  const { currentTheme } = useTheme();
   // renders
   return (
     <BottomSheet
@@ -35,10 +35,15 @@ export const DownloadPicture = ({
       <BottomSheetView
         style={[
           styles.contentContainer,
-          { backgroundColor: theme === "light" ? "white" : "black" },
+          { backgroundColor: currentTheme === "light" ? "white" : "black" },
         ]}
       >
-        <ThemedView style={{ flex: 1 }}>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: currentTheme === "dark" ? "black" : "white",
+          }}
+        >
           <Image
             style={styles.image}
             source={{
@@ -108,7 +113,7 @@ export const DownloadPicture = ({
             style={[
               styles.label,
               {
-                color: theme === "light" ? "black" : "white",
+                color: currentTheme === "dark" ? "white" : "black",
               },
             ]}
           >
@@ -116,15 +121,35 @@ export const DownloadPicture = ({
           </Text>
 
           <View style={styles.bottomContainer}>
-            <Pressable style={styles.btn}>
+            <Pressable
+              style={[
+                styles.btn,
+                {
+                  backgroundColor: currentTheme === "dark" ? "white" : "black",
+                  borderColor: currentTheme === "dark" ? "white" : "black",
+                },
+              ]}
+            >
               <View style={{ flexDirection: "row", gap: 6 }}>
-                <Ionicons name="download" size={24} color={"white"} />
+                <Ionicons
+                  name="download"
+                  size={24}
+                  color={currentTheme === "dark" ? "black" : "white"}
+                />
 
-                <Text style={{ color: "white", fontSize: 20 }}>Download</Text>
+                <Text
+                  style={{
+                    color: currentTheme === "dark" ? "black" : "white",
+
+                    fontSize: 20,
+                  }}
+                >
+                  Download
+                </Text>
               </View>
             </Pressable>
           </View>
-        </ThemedView>
+        </View>
       </BottomSheetView>
     </BottomSheet>
   );
@@ -162,7 +187,7 @@ const styles = StyleSheet.create({
   },
   btn: {
     alignItems: "center",
-    backgroundColor: "black",
+
     padding: 10,
     borderRadius: 10,
     width: "60%",
