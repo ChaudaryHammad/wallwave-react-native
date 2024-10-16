@@ -3,10 +3,27 @@ import React from "react";
 
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
+import {
+  useLibraryWallPapers,
+  useLikedWallPapers,
+  useSuggestedWallPapers,
+} from "@/src/hooks/useWallpaper";
+import { SplitScreen } from "@/src/components";
+import { useTheme } from "@/src/context/ThemeContext";
+
 const Foryou = () => {
   const Tab = createMaterialTopTabNavigator();
+  const { currentTheme } = useTheme();
+
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+      screenOptions={{
+        tabBarActiveTintColor: currentTheme === "dark" ? "white" : "black",
+        tabBarStyle: {
+          backgroundColor: currentTheme === "dark" ? "black" : "white",
+        },
+      }}
+    >
       <Tab.Screen name="Library" component={Library} />
       <Tab.Screen name="Liked" component={Liked} />
       <Tab.Screen name="Suggested" component={Recommeded} />
@@ -16,25 +33,46 @@ const Foryou = () => {
 
 export default Foryou;
 function Library() {
+  const { currentTheme } = useTheme();
+  const wallPaper = useLibraryWallPapers();
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Library</Text>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: currentTheme === "dark" ? "black" : "white",
+      }}
+    >
+      <SplitScreen wallPaper={wallPaper} />
     </View>
   );
 }
 
 function Liked() {
+  const wallPaper = useLikedWallPapers();
+  const { currentTheme } = useTheme();
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Liked</Text>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: currentTheme === "dark" ? "black" : "white",
+      }}
+    >
+      <SplitScreen wallPaper={wallPaper} />
     </View>
   );
 }
 
 function Recommeded() {
+  const wallPaper = useSuggestedWallPapers();
+  const { currentTheme } = useTheme();
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Recommended!</Text>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: currentTheme === "dark" ? "black" : "white",
+      }}
+    >
+      <SplitScreen wallPaper={wallPaper} />
     </View>
   );
 }

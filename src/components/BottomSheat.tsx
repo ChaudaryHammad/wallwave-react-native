@@ -5,6 +5,7 @@ import { Wallpaper } from "../hooks/useWallpaper";
 
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "react-native-paper";
+import { ThemedView } from "./ThemedView";
 
 export const DownloadPicture = ({
   onClose,
@@ -17,7 +18,7 @@ export const DownloadPicture = ({
   const bottomSheetRef = useRef<BottomSheet>(null);
 
   const snapPoints = useMemo(() => ["95%"], []);
-  const theme = useTheme().dark ? "dark" : "light";
+  const theme = useTheme().dark ? "light" : "dark";
 
   // renders
   return (
@@ -37,95 +38,93 @@ export const DownloadPicture = ({
           { backgroundColor: theme === "light" ? "white" : "black" },
         ]}
       >
-        <Image
-          style={styles.image}
-          source={{
-            uri: wallPaper.url,
-          }}
-        />
-
-        <Pressable
-          onPress={onClose}
-          style={{
-            position: "absolute",
-            right: 10,
-            top: 10,
-          }}
-        >
-          <Ionicons
-            name="close"
-            size={24}
-            color={theme === "light" ? "white" : "black"}
-            style={{
-              backgroundColor: "rgba(0,0,0,0.5)",
-              borderRadius: 50,
-              padding: 5,
+        <ThemedView style={{ flex: 1 }}>
+          <Image
+            style={styles.image}
+            source={{
+              uri: wallPaper.url,
             }}
           />
-        </Pressable>
 
-        <View
-          style={{
-            position: "absolute",
-            left: 10,
-            top: 10,
-          }}
-        >
-          <Ionicons
-            name="heart"
-            size={24}
-            color={theme === "light" ? "white" : "black"}
+          <Pressable
+            onPress={onClose}
             style={{
-              backgroundColor: "rgba(0,0,0,0.5)",
-              borderRadius: 50,
-              padding: 5,
+              position: "absolute",
+              right: 10,
+              top: 10,
             }}
-          />
-        </View>
-
-        <View
-          style={{
-            position: "absolute",
-            left: 10,
-            top: 55,
-          }}
-        >
-          <Ionicons
-            name="share-social"
-            size={24}
-            color={theme === "light" ? "white" : "black"}
-            style={{
-              backgroundColor: "rgba(0,0,0,0.5)",
-              borderRadius: 50,
-              padding: 5,
-            }}
-          />
-        </View>
-
-        <Text
-          style={[
-            styles.label,
-            {
-              color: theme === "light" ? "black" : "white",
-            },
-          ]}
-        >
-          {wallPaper.name}
-        </Text>
-
-        <View style={styles.bottomContainer}>
-          <Pressable style={styles.btn}>
-            <View style={{ flexDirection: "row", gap: 6 }}>
-              <Ionicons
-                name="download"
-                size={24}
-                color={theme === "light" ? "white" : "black"}
-              />
-
-              <Text style={{ color: "white", fontSize: 20 }}>Download</Text>
-            </View>
+          >
+            <Ionicons
+              name="close"
+              size={24}
+              color={"white"}
+              style={{
+                backgroundColor: "rgba(0,0,0,0.5)",
+                borderRadius: 50,
+                padding: 5,
+              }}
+            />
           </Pressable>
-        </View>
+
+          <View
+            style={{
+              position: "absolute",
+              left: 10,
+              top: 10,
+            }}
+          >
+            <Ionicons
+              name="heart"
+              size={24}
+              color={"white"}
+              style={{
+                backgroundColor: "rgba(0,0,0,0.5)",
+                borderRadius: 50,
+                padding: 5,
+              }}
+            />
+          </View>
+
+          <View
+            style={{
+              position: "absolute",
+              left: 10,
+              top: 55,
+            }}
+          >
+            <Ionicons
+              name="share-social"
+              size={24}
+              color={"white"}
+              style={{
+                backgroundColor: "rgba(0,0,0,0.5)",
+                borderRadius: 50,
+                padding: 5,
+              }}
+            />
+          </View>
+
+          <Text
+            style={[
+              styles.label,
+              {
+                color: theme === "light" ? "black" : "white",
+              },
+            ]}
+          >
+            {wallPaper.name}
+          </Text>
+
+          <View style={styles.bottomContainer}>
+            <Pressable style={styles.btn}>
+              <View style={{ flexDirection: "row", gap: 6 }}>
+                <Ionicons name="download" size={24} color={"white"} />
+
+                <Text style={{ color: "white", fontSize: 20 }}>Download</Text>
+              </View>
+            </Pressable>
+          </View>
+        </ThemedView>
       </BottomSheetView>
     </BottomSheet>
   );

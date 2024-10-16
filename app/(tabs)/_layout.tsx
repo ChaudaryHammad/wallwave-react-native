@@ -4,17 +4,30 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import Foryou from "./foryou";
 import Index from "./index";
 import UserAccount from "./account";
+import { useTheme } from "@/src/context/ThemeContext";
 
 export default function BottomTabLayout() {
+  const { currentTheme } = useTheme();
   const Tab = createMaterialBottomTabNavigator();
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+      initialRouteName="For you"
+      activeColor={currentTheme === "dark" ? "white" : "black"}
+      inactiveColor="grey"
+      barStyle={{
+        backgroundColor: currentTheme === "dark" ? "black" : "white",
+      }}
+    >
       <Tab.Screen
         name="For you"
         component={Foryou}
         options={{
           tabBarIcon: ({ color, focused }) => (
-            <FontAwesome5 name="home" color={color} size={20} />
+            <FontAwesome5
+              name="home"
+              color={focused ? "black" : color}
+              size={20}
+            />
           ),
         }}
       />
@@ -22,8 +35,12 @@ export default function BottomTabLayout() {
         name="Explore"
         component={Index}
         options={{
-          tabBarIcon: ({ color }) => (
-            <FontAwesome5 name="map" color={color} size={20} />
+          tabBarIcon: ({ color, focused }) => (
+            <FontAwesome5
+              name="map"
+              color={focused ? "black" : color}
+              size={20}
+            />
           ),
         }}
       />
@@ -31,8 +48,12 @@ export default function BottomTabLayout() {
         name="Account"
         component={UserAccount}
         options={{
-          tabBarIcon: ({ color }) => (
-            <FontAwesome5 name="cog" color={color} size={20} />
+          tabBarIcon: ({ color, focused }) => (
+            <FontAwesome5
+              name="cog"
+              color={focused ? "black" : color}
+              size={20}
+            />
           ),
         }}
       />
