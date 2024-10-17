@@ -4,45 +4,76 @@ import { ThemedView } from "../ThemedView";
 import { ImageCard } from "../cards";
 import { useWallpaper, Wallpaper } from "@/src/hooks/useWallpaper";
 import { DownloadPicture } from "../BottomSheat";
+import { useTheme } from "@/src/context/ThemeContext";
 
-export const SplitScreen = ({ wallPaper }: { wallPaper: Wallpaper[] }) => {
+export const SplitScreen = ({
+  wallPaper,
+  onScroll,
+}: {
+  wallPaper: Wallpaper[];
+  onScroll?: (yOffset: number) => void;
+}) => {
   const [selectedWallpaper, setSelectedWallpaper] =
     useState<Wallpaper | null>();
+  const { currentTheme } = useTheme();
 
   return (
     <>
-      <View style={styles.container}>
-        <View style={styles.innerContainer}>
-          <FlatList
-            data={wallPaper.filter((_, index) => index % 2 === 0)}
-            keyExtractor={(item) => item.name}
-            renderItem={({ item }) => (
+      <FlatList
+        onScroll={(e) => {
+          let yOffset = e.nativeEvent.contentOffset.y / 1;
+          onScroll && onScroll(yOffset);
+        }}
+        data={wallPaper
+          .filter((_, index) => index % 2 === 0)
+          .map((_, index) => [wallPaper[index], wallPaper[index + 1]])}
+        keyExtractor={(item) => item[0].name}
+        renderItem={({ item: [first, second] }) => (
+          <View
+            style={[
+              styles.container,
+              {
+                backgroundColor: currentTheme === "dark" ? "#000" : "#fff",
+              },
+            ]}
+          >
+            <View
+              style={[
+                styles.innerContainer,
+                {
+                  backgroundColor: currentTheme === "dark" ? "#000" : "#fff",
+                },
+              ]}
+            >
               <View style={styles.imageContainer}>
                 <ImageCard
-                  onPress={() => setSelectedWallpaper(item)}
-                  wallPaper={item}
+                  onPress={() => setSelectedWallpaper(first)}
+                  wallPaper={first}
                 />
               </View>
-            )}
-            nestedScrollEnabled={true}
-          />
-        </View>
-        <View style={styles.innerContainer}>
-          <FlatList
-            data={wallPaper.filter((_, index) => index % 2 === 1)}
-            keyExtractor={(item) => item.name}
-            renderItem={({ item }) => (
-              <View style={styles.imageContainer}>
-                <ImageCard
-                  onPress={() => setSelectedWallpaper(item)}
-                  wallPaper={item}
-                />
-              </View>
-            )}
-            nestedScrollEnabled={true}
-          />
-        </View>
-      </View>
+            </View>
+
+            <View
+              style={[
+                styles.innerContainer,
+                {
+                  backgroundColor: currentTheme === "dark" ? "#000" : "#fff",
+                },
+              ]}
+            >
+              {second && (
+                <View style={styles.imageContainer}>
+                  <ImageCard
+                    onPress={() => setSelectedWallpaper(second)}
+                    wallPaper={second}
+                  />
+                </View>
+              )}
+            </View>
+          </View>
+        )}
+        nestedScrollEnabled={true}
+      />
 
       {selectedWallpaper && (
         <DownloadPicture
