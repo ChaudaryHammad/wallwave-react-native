@@ -4,20 +4,59 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Stack } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TabHeader } from "../components/Header/TabHeader";
-
+import { ClerkProvider, ClerkLoaded } from "@clerk/clerk-expo";
 import { ThemeProvider, useTheme } from "../context/ThemeContext"; // ThemeProvider and useTheme imported
+import * as SecureStore from "expo-secure-store";
+import { SignedIn, SignedOut, useUser } from "@clerk/clerk-expo";
+import { Link } from "expo-router";
+const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!;
+
+if (!publishableKey) {
+  throw new Error(
+    "Missing Publishable Key. Please set EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY in your .env"
+  );
+}
+
+const tokenCache = {
+  async getToken(key: string) {
+    try {
+      const item = await SecureStore.getItemAsync(key);
+      if (item) {
+        console.log(`${key} was used 🔐 \n`);
+      } else {
+        console.log("No values stored under key: " + key);
+      }
+      return item;
+    } catch (error) {
+      console.error("SecureStore get item error: ", error);
+      await SecureStore.deleteItemAsync(key);
+      return null;
+    }
+  },
+  async saveToken(key: string, value: string) {
+    try {
+      return SecureStore.setItemAsync(key, value);
+    } catch (err) {
+      return;
+    }
+  },
+};
 
 export const RootLayout = () => {
   return (
     <ThemeProvider>
-      <RootContent />
+      <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
+        <ClerkLoaded>
+          <RootContent />
+        </ClerkLoaded>
+      </ClerkProvider>
     </ThemeProvider>
   );
 };
 
 const RootContent = () => {
   const { currentTheme } = useTheme(); // Now inside the ThemeProvider
-
+  const { user } = useUser();
   useEffect(() => {
     // Force updating StatusBar style based on theme
     StatusBar.setBarStyle(
@@ -46,10 +85,18 @@ const RootContent = () => {
               backgroundColor: "red",
             },
           }}
-          initialRouteName=""
         >
           <Stack.Screen
-            name="(tabs)"
+            name="(main)"
+            options={{
+              headerShown: false,
+              headerTitleAlign: "center",
+              headerTitle: "tabs",
+            }}
+          />
+
+          <Stack.Screen
+            name="(auth)"
             options={{
               headerShown: false,
               headerTitleAlign: "center",

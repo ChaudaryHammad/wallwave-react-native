@@ -1,5 +1,4 @@
 import {
-  Dimensions,
   Image,
   SafeAreaView,
   StyleSheet,
@@ -28,6 +27,7 @@ const Index = () => {
   const [scrollY, setScrollY] = useState<number>(0);
   const TOB_BAR_HEIGHT = 250;
   const { currentTheme } = useTheme();
+
   return (
     <SafeAreaView
       style={{

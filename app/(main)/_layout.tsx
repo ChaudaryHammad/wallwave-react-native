@@ -5,9 +5,19 @@ import Foryou from "./foryou";
 import Index from "./index";
 import UserAccount from "./account";
 import { useTheme } from "@/src/context/ThemeContext";
+import { useAuth } from "@clerk/clerk-expo";
+import { Redirect } from "expo-router";
 
 export default function BottomTabLayout() {
   const { currentTheme } = useTheme();
+
+  const { isSignedIn } = useAuth();
+
+  if (!isSignedIn) {
+    // On web, static rendering will stop here as the user is not authenticated
+    // in the headless Node process that the pages are rendered in.
+    return <Redirect href="/sign-in" />;
+  }
   const Tab = createMaterialBottomTabNavigator();
   return (
     <Tab.Navigator
