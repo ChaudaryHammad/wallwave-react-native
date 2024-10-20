@@ -3,6 +3,7 @@ import { TextInput, Button, View, Text } from "react-native";
 import { useSignUp } from "@clerk/clerk-expo";
 import { Link, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import Spinner from "react-native-loading-spinner-overlay";
 
 export default function SignUp() {
   const { isLoaded, signUp, setActive } = useSignUp();
@@ -12,11 +13,13 @@ export default function SignUp() {
   const [password, setPassword] = React.useState("");
   const [pendingVerification, setPendingVerification] = React.useState(false);
   const [code, setCode] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
 
   const onSignUpPress = async () => {
     if (!isLoaded) {
       return;
     }
+    setLoading(true);
 
     try {
       await signUp.create({
@@ -30,7 +33,9 @@ export default function SignUp() {
     } catch (err: any) {
       // See https://clerk.com/docs/custom-flows/error-handling
       // for more info on error handling
-      console.error(JSON.stringify(err, null, 2));
+      alert(err.errors[0].message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -38,7 +43,7 @@ export default function SignUp() {
     if (!isLoaded) {
       return;
     }
-
+    setLoading(true);
     try {
       const completeSignUp = await signUp.attemptEmailAddressVerification({
         code,
@@ -53,7 +58,9 @@ export default function SignUp() {
     } catch (err: any) {
       // See https://clerk.com/docs/custom-flows/error-handling
       // for more info on error handling
-      console.error(JSON.stringify(err, null, 2));
+      alert(err.errors[0].message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -65,6 +72,7 @@ export default function SignUp() {
         backgroundColor: "white",
       }}
     >
+      <Spinner visible={loading} />
       {!pendingVerification && (
         <View
           style={{
@@ -174,6 +182,7 @@ export default function SignUp() {
             marginHorizontal: 30,
           }}
         >
+          <Spinner visible={loading} />
           <Text
             style={{
               fontSize: 32,

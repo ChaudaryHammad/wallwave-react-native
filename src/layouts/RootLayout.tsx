@@ -1,13 +1,13 @@
 import { Platform, StatusBar } from "react-native";
 import React, { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { Stack } from "expo-router";
+import { Stack, useRouter, useSegments } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TabHeader } from "../components/Header/TabHeader";
 import { ClerkProvider, ClerkLoaded } from "@clerk/clerk-expo";
 import { ThemeProvider, useTheme } from "../context/ThemeContext"; // ThemeProvider and useTheme imported
 import * as SecureStore from "expo-secure-store";
-import { SignedIn, SignedOut, useUser } from "@clerk/clerk-expo";
+import { useUser, useAuth } from "@clerk/clerk-expo";
 import { Link } from "expo-router";
 const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!;
 
@@ -56,8 +56,20 @@ export const RootLayout = () => {
 
 const RootContent = () => {
   const { currentTheme } = useTheme(); // Now inside the ThemeProvider
-  const { user } = useUser();
+
+  const { isLoaded, isSignedIn } = useAuth();
+  const segment = useSegments();
+  const router = useRouter();
   useEffect(() => {
+    if (!isLoaded) return;
+
+    const inPublicGroup = segment[0] === "(public)";
+    if (!inPublicGroup && isSignedIn) {
+      router.replace("/");
+    } else if (!isSignedIn) {
+      router.replace("/sign-in");
+    }
+
     // Force updating StatusBar style based on theme
     StatusBar.setBarStyle(
       currentTheme === "dark" ? "light-content" : "dark-content",
@@ -72,7 +84,7 @@ const RootContent = () => {
         true
       );
     }
-  }, [currentTheme]);
+  }, [currentTheme, isSignedIn]);
   return (
     <SafeAreaView style={{ flexGrow: 1 }}>
       <GestureHandlerRootView style={{ flexGrow: 1 }}>
@@ -81,13 +93,14 @@ const RootContent = () => {
         />
         <Stack
           screenOptions={{
+            headerShown: false,
             headerStyle: {
               backgroundColor: "red",
             },
           }}
         >
           <Stack.Screen
-            name="(main)"
+            name="(auth)"
             options={{
               headerShown: false,
               headerTitleAlign: "center",
@@ -96,7 +109,7 @@ const RootContent = () => {
           />
 
           <Stack.Screen
-            name="(auth)"
+            name="(public)"
             options={{
               headerShown: false,
               headerTitleAlign: "center",

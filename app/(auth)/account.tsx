@@ -4,16 +4,21 @@ import {
   StyleSheet,
   useColorScheme,
   useWindowDimensions,
+  Image,
+  Pressable,
 } from "react-native";
 import React from "react";
 import { AuthButton, ThemeButton } from "@/src/components";
 import { Ionicons } from "@expo/vector-icons";
 import { ThemedView } from "@/src/components/ThemedView";
 import { useTheme } from "@/src/context/ThemeContext";
+import { useAuth, useUser } from "@clerk/clerk-expo";
 
+import { router } from "expo-router"; // Importing router
 const Account = () => {
   const windowWidth = useWindowDimensions().width;
   const { currentTheme, setTheme } = useTheme();
+  const { user } = useUser();
 
   return (
     <View
@@ -41,11 +46,22 @@ const Account = () => {
           >
             Panels
           </Text>
-          <Ionicons
-            name="person-circle"
-            size={40}
-            color={currentTheme === "dark" ? "white" : "black"}
-          />
+          <Pressable onPress={() => router.push("/(nobottombar)/accountInfo")}>
+            {user ? (
+              <View>
+                <Image
+                  source={{ uri: user.imageUrl }}
+                  style={{ width: 50, height: 50, borderRadius: 25 }}
+                />
+              </View>
+            ) : (
+              <Ionicons
+                name="person-circle"
+                size={50}
+                color={currentTheme === "dark" ? "white" : "black"}
+              />
+            )}
+          </Pressable>
         </View>
         <Text
           style={[

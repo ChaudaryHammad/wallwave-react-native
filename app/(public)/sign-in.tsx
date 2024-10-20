@@ -1,30 +1,24 @@
 import { useSignIn } from "@clerk/clerk-expo";
 import { Link, useRouter } from "expo-router";
-import {
-  Text,
-  TextInput,
-  Button,
-  View,
-  ImageBackground,
-  StyleSheet,
-  Image,
-} from "react-native";
-import React from "react";
+import { Text, TextInput, View, StyleSheet } from "react-native";
+import React, { useCallback, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Spinner from "react-native-loading-spinner-overlay";
 
 export default function SignIn() {
   const { signIn, setActive, isLoaded } = useSignIn();
   const router = useRouter();
 
-  const [emailAddress, setEmailAddress] = React.useState("");
-  const [password, setPassword] = React.useState("");
+  const [emailAddress, setEmailAddress] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const onSignInPress = React.useCallback(async () => {
+  const onSignInPress = useCallback(async () => {
     if (!isLoaded) {
       return;
     }
-
+    setLoading(true);
     try {
       const signInAttempt = await signIn.create({
         identifier: emailAddress,
@@ -40,7 +34,9 @@ export default function SignIn() {
         console.error(JSON.stringify(signInAttempt, null, 2));
       }
     } catch (err: any) {
-      console.error(JSON.stringify(err, null, 2));
+      alert(err.errors[0].message);
+    } finally {
+      setLoading(false);
     }
   }, [isLoaded, emailAddress, password]);
 
@@ -52,6 +48,7 @@ export default function SignIn() {
         backgroundColor: "white",
       }}
     >
+      <Spinner visible={loading} />
       <View
         style={{
           marginHorizontal: 30,
@@ -92,6 +89,18 @@ export default function SignIn() {
           secureTextEntry={true}
           onChangeText={(password) => setPassword(password)}
         />
+
+        <Link href="/reset">
+          <Text
+            style={{
+              textAlign: "right",
+              textDecorationStyle: "solid",
+              textDecorationLine: "underline",
+            }}
+          >
+            Forgot password?
+          </Text>
+        </Link>
         {/* <Button title="Sign In" onPress={onSignInPress} /> */}
 
         <View
